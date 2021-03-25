@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { StyleSheet, View, TouchableHighlight } from 'react-native';
+import { StyleSheet, View} from 'react-native';
 import RemoteMouseService from './services/remote-mouse-service'
 import getWebSocketInstance from "./services/web-socket-instance";
 
@@ -26,15 +26,12 @@ const App = () => {
     <View style={styles.container}>
 
       {remoteMouseService &&
-        <TouchableHighlight
-            activeOpacity={0.6}
-            underlayColor="#DDDDDD"
-            onPress={(event) => handleTrackpadTouch(event)}
-            style={styles.trackpad}>
-          <View >
 
+          <View
+              onStartShouldSetResponder={() => true}
+              onResponderMove={(evt) => handleTrackpadTouch(evt)}
+              style={styles.trackpad}>
           </View>
-        </TouchableHighlight>
       }
     </View>
   );
