@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { StyleSheet, View} from 'react-native';
-import RemoteMouseService from './services/remote-mouse-service'
-import getWebSocketInstance from "./services/web-socket-instance";
+import RemoteMouseService from './app/services/remote-mouse-service'
+import getWebSocketInstance from "./app/services/web-socket-instance";
 //import debounce from 'lodash.debounce';
 
 const App = () => {
@@ -39,11 +39,11 @@ const App = () => {
   const handleTrackpadTouch = nativeEvent => {
     const [deltaX, deltaY] = getDeltaPositionXY(nativeEvent);
     const location = `${deltaX} ${deltaY}`
-    remoteMouseService.sendMessage(location)
+    if(deltaX && deltaY)
+      remoteMouseService.sendMessage(location)
   }
 
   const handleTouchRelease = () => {
-    console.log('release')
     isTouched = false
     prevPositionX = 0;
     prevPositionY = 0;
