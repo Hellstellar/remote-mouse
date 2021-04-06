@@ -12,7 +12,7 @@ const App = () => {
   let isTouched = false
 
   useEffect(() => {
-    const webSocketInstance = getWebSocketInstance("http://192.168.1.11:4444/?clientName=MobileClient")
+    const webSocketInstance = getWebSocketInstance("http://192.168.1.18:4444/?clientName=MobileClient")
     setRemoteMouseService(RemoteMouseService(webSocketInstance));
   }, [])
 
