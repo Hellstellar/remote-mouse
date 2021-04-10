@@ -2,17 +2,15 @@ import React, {useEffect, useState} from 'react';
 import { StyleSheet, View} from 'react-native';
 import RemoteMouseService from './app/services/remote-mouse-service'
 import getWebSocketInstance from "./app/services/web-socket-instance";
-//import debounce from 'lodash.debounce';
+import useTrackpadHandler from "./app/hooks/useTrackpadHandler";
 
 const App = () => {
 
   const [remoteMouseService, setRemoteMouseService] = useState();
-  let prevPositionX = 0;
-  let prevPositionY = 0;
-  let isTouched = false
+  const { handleTouchRelease, handleTrackpadTouch } = useTrackpadHandler(remoteMouseService)
 
   useEffect(() => {
-    const webSocketInstance = getWebSocketInstance("http://192.168.1.18:4444/?clientName=MobileClient")
+    const webSocketInstance = getWebSocketInstance("http://192.168.1.13:4444/?clientName=MobileClient")
     setRemoteMouseService(RemoteMouseService(webSocketInstance));
   }, [])
 
@@ -20,36 +18,6 @@ const App = () => {
     if(remoteMouseService)
       remoteMouseService.start();
   },[remoteMouseService])
-
-  const getDeltaPositionXY = ({locationX, locationY}) => {
-    const currentPositionX = (locationX).toFixed()
-    const currentPositionY = (locationY).toFixed()
-    const deltaX = currentPositionX - prevPositionX
-    const deltaY = currentPositionY - prevPositionY
-    prevPositionX = currentPositionX
-    prevPositionY = currentPositionY
-    if(!isTouched) {
-      isTouched = true;
-      return [0, 0]
-    }
-    return [deltaX, deltaY];
-  };
-
-
-  const handleTrackpadTouch = nativeEvent => {
-    const [deltaX, deltaY] = getDeltaPositionXY(nativeEvent);
-    const location = `${deltaX} ${deltaY}`
-    if(deltaX && deltaY)
-      remoteMouseService.sendMessage(location)
-  }
-
-  const handleTouchRelease = () => {
-    isTouched = false
-    prevPositionX = 0;
-    prevPositionY = 0;
-  }
-
-  //const delayedHandleTouchMove = debounce(event => handleTrackpadTouch(event), 10);
 
 
   return (
@@ -77,8 +45,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   trackpad: {
-    width: '90%',
-    height: '70%',
+    width: '100%',
+    height: '80%',
     borderColor: '#05F4B7',
     borderWidth: 3,
     borderRadius: 20,
