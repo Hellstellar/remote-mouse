@@ -1,21 +1,18 @@
-import getWebSocketInstance from './web-socket-instance'
-
 const tag = "WebSocket"
 
 
 export default (webSocketInstance) => {
     const start = () => {
-        webSocketInstance.onerror = (e) => {
-            console.log(tag, 'Error', e.message);
+        webSocketInstance.onerror = (event) => {
+            console.log(tag, 'Error', event.message);
         };
-        webSocketInstance.onopen = (ws, event) => {
+        webSocketInstance.onopen = () => {
             console.log(tag, "Socket open");
             webSocketInstance.isAlive = true
-            webSocketInstance.send('hey hammerspoon')
         };
 
-        webSocketInstance.onmessage = evt => {
-            console.log(evt.data)
+        webSocketInstance.onmessage = event => {
+            console.log(event.data)
         }
 
         webSocketInstance.onclose = () => {
