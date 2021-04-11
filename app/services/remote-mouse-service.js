@@ -17,6 +17,7 @@ export default (webSocketInstance) => {
 
         webSocketInstance.onclose = () => {
             console.log(tag, "Socket closed");
+            webSocketInstance.isAlive = false
         };
     }
 

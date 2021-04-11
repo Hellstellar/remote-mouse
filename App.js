@@ -22,12 +22,11 @@ const App = () => {
 
   return (
     <View style={styles.container}>
-
       {remoteMouseService &&
           <View
-              onStartShouldSetResponder={onStartShouldSetResponder}
-              onResponderMove={evt => handleTrackpadMove(evt.nativeEvent)}
-              onResponderRelease={handleTouchRelease}
+              onStartShouldSetResponder={event => onStartShouldSetResponder(event.nativeEvent)}
+              onResponderMove={event => handleTrackpadMove(event.nativeEvent)}
+              onResponderRelease={event => handleTouchRelease(event.nativeEvent)}
               style={styles.trackpad}>
           </View>
       }
