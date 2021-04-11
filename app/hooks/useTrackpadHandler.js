@@ -2,7 +2,8 @@ import { EMouseEvents } from "../constants/enums";
 
 const useTrackpadHandler = (remoteMouseService) => {
     const tapDuration = 100;
-    const sensitivity = 3
+    const precision = 3;
+    const sensitivity = 1.5
     const deltaPosition = {
         x: 0,
         y: 0,
@@ -19,15 +20,15 @@ const useTrackpadHandler = (remoteMouseService) => {
         const time = timestamp - prevMoveTouchTimestamp
         prevMoveTouchTimestamp = timestamp
         const distance = Math.hypot(deltaPosition.x, deltaPosition.y)
-        const velocity = distance/time
+        const velocity = (distance/time) * sensitivity
         if(velocity < 1)
             return 1
-        return velocity.toFixed(sensitivity)
+        return velocity.toFixed(precision)
     };
 
     const _changeDeltaPosition = (locationX, locationY) => {
-        const currentPositionX = (locationX).toFixed(sensitivity)
-        const currentPositionY = (locationY).toFixed(sensitivity)
+        const currentPositionX = (locationX).toFixed(precision)
+        const currentPositionY = (locationY).toFixed(precision)
         const deltaX = (currentPositionX - previousPosition.x)
         const deltaY = (currentPositionY - previousPosition.y)
         previousPosition.x = currentPositionX
