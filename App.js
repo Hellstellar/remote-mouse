@@ -10,7 +10,7 @@ const App = () => {
   const { onStartShouldSetResponder, handleTouchRelease, handleTrackpadMove } = useTrackpadHandler(remoteMouseService)
 
   useEffect(() => {
-    const webSocketInstance = getWebSocketInstance("http://192.168.1.13:4444/?clientName=MobileClient")
+    const webSocketInstance = getWebSocketInstance("http://192.168.29.177:4444/?clientName=MobileClient")
     setRemoteMouseService(RemoteMouseService(webSocketInstance));
   }, [])
 
