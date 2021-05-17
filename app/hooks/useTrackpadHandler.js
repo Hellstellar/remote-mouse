@@ -3,7 +3,7 @@ import { EMouseEvents } from "../constants/enums";
 const useTrackpadHandler = (remoteMouseService) => {
     const tapDuration = 100;
     const precision = 3;
-    const sensitivity = 1.5
+    const sensitivity = 3
     const deltaPosition = {
         x: 0,
         y: 0,
