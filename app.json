@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Mobile App that can control your device's mouse. (Requires remote mouse server",
+    "githubUrl": "https://github.com/Hellstellar/remote-mouse"
   }
 }

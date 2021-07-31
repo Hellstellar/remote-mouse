@@ -14,7 +14,7 @@ const isValidUrl = (remoteUrl) => {
 
 const remoteUrlBuilder = (remoteIpAddress) => {
     //TODO: Add free port finder
-    return `http://${remoteIpAddress}:4444/?clientName=MobileClient`
+    return `http://${remoteIpAddress}/?clientName=MobileClient`
 }
 
 const useWebSocketService = (openConnectionHandler, closedConnectionHandler, errorHandler) => {
