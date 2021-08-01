@@ -11,11 +11,13 @@
     "dotenv": "^8.2.0",
     "expo": "~40.0.0",
     "expo-barcode-scanner": "~9.1.0",
+    "expo-font": "~8.4.0",
     "expo-status-bar": "~1.0.3",
     "lodash.debounce": "^4.0.8",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
+    "react-native-elements": "^3.4.2",
     "react-native-paper": "^4.7.2",
     "react-native-web": "~0.13.12"
   },

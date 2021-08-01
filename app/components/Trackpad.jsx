@@ -3,8 +3,8 @@ import React from "react";
 import useTrackpadHandler from "../hooks/useTrackpadHandler";
 import colors from "../constants/styling/colors";
 
-const Trackpad = ({remoteMouseService}) => {
-    const { onStartShouldSetResponder, handleTouchRelease, handleTrackpadMove } = useTrackpadHandler(remoteMouseService)
+const Trackpad = ({remoteMouseService, sensitivity}) => {
+    const { onStartShouldSetResponder, handleTouchRelease, handleTrackpadMove } = useTrackpadHandler(remoteMouseService, sensitivity)
 
     return (
         <View

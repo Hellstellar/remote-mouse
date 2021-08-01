@@ -14,3 +14,6 @@ Control your mouse with mobile device
 6. Download the `expo go` app on your mobile
 7. Scan the QR code on your browser from the app
 8. Your app will be started on mobile
+
+## Usage
+1. Open `Remote Mouse Server` from 

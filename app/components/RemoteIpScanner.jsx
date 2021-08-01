@@ -41,7 +41,7 @@ const RemoteIpScanner = ({scannedDataHandler, retry}) => {
             }
         </>
     );
-}
+};
 export default RemoteIpScanner
 
 const styles = StyleSheet.create({
