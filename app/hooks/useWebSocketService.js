@@ -48,9 +48,14 @@ const useWebSocketService = (openConnectionHandler, closedConnectionHandler, err
         webSocketInstance.send(message)
     }
 
+    const closeConnection = () => {
+        webSocketInstance.close();
+    }
+
     return {
         sendMessage,
         setRemoteConnection,
+        closeConnection
     }
 }
 export default useWebSocketService

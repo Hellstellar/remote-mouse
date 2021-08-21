@@ -1,10 +1,9 @@
 import React, {useState} from "react";
 import useWebSocketService from "../hooks/useWebSocketService";
 import Trackpad from "./Trackpad";
-import {StyleSheet, View} from "react-native";
-import colors from "../constants/styling/colors";
 import RemoteIpScanner from "./RemoteIpScanner";
-import {Slider} from 'react-native-elements';
+import {Flex, Slider, SmallCloseIcon} from "native-base";
+
 
 const Main = () => {
     const [isConnected, setIsConnected] = useState(false)
@@ -28,41 +27,33 @@ const Main = () => {
     }
 
     return (
-        <View style={styles.container}>
+        <Flex flexGrow={1} bg="blueGray.900" color="emerald.300" align={"center"} justify={"center"}>
+            {isConnected ? (
                 <>
-                    {isConnected ? (
-                        <>
-                            <Trackpad remoteMouseService={remoteMouseService} sensitivity={sensitivity}/>
-                            <Slider
-                                style={{width: '80%'}}
-                                value={sensitivity}
-                                step={2}
-                                minimumValue={1}
-                                maximumValue={9}
-                                minimumTrackTintColor={colors.primary}
-                                thumbStyle={{backgroundColor: colors.primary, height: 20}}
-                                onValueChange={(value) => setSensitivity(value)}
-                            />
-                        </>
-                    ): (
-                        <>
-                            <RemoteIpScanner scannedDataHandler={handleRemoteIpAddress} retry={retryScan}/>
-                        </>
-                    )}
+                    <SmallCloseIcon mb={2} mt={5} ml={2} alignSelf={"flex-start"} color={"red.500"}
+                                    onPress={() => remoteMouseService.closeConnection()}/>
+                    <Trackpad remoteMouseService={remoteMouseService} sensitivity={sensitivity}/>
+                    <Slider
+                        mt={5}
+                        w={"80%"}
+                        defaultValue={sensitivity}
+                        step={0.5}
+                        minValue={1}
+                        maxValue={9}
+                        onChange={(value) => setSensitivity(value)}
+                    >
+                        <Slider.Track>
+                            <Slider.FilledTrack bg="emerald.300"/>
+                        </Slider.Track>
+                        <Slider.Thumb bg="emerald.300" h={"20px"} w={"40px"}/>
+                    </Slider>
                 </>
-        </View>
+            ) : (
+                <>
+                    <RemoteIpScanner scannedDataHandler={handleRemoteIpAddress} retry={retryScan}/>
+                </>
+            )}
+        </Flex>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.background,
-        color: colors.primary,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
-
-
 export default Main

@@ -14,12 +14,15 @@
     "expo-font": "~8.4.0",
     "expo-status-bar": "~1.0.3",
     "lodash.debounce": "^4.0.8",
+    "native-base": "^3.1.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
-    "react-native-elements": "^3.4.2",
-    "react-native-paper": "^4.7.2",
-    "react-native-web": "~0.13.12"
+    "react-native-safe-area-context": "3.1.9",
+    "react-native-svg": "12.1.0",
+    "react-native-web": "~0.13.12",
+    "styled-components": "^5.3.0",
+    "styled-system": "^5.1.5"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
