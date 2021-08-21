@@ -42,10 +42,10 @@ const Main = () => {
                         maxValue={9}
                         onChange={(value) => setSensitivity(value)}
                     >
-                        <Slider.Track>
+                        <Slider.Track bg="gray.700">
                             <Slider.FilledTrack bg="emerald.300"/>
                         </Slider.Track>
-                        <Slider.Thumb bg="emerald.300" h={"20px"} w={"40px"}/>
+                        <Slider.Thumb bg="emerald.300" h={"15px"} w={"30px"}/>
                     </Slider>
                 </>
             ) : (
