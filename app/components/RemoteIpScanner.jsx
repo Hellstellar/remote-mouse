@@ -16,7 +16,6 @@ const RemoteIpScanner = ({scannedDataHandler, retry, loader}) => {
     }, []);
 
         const handleBarCodeScanned = (event) => {
-            console.log(event.data)
             setScanned(true);
             scannedDataHandler(event.data)
         };
