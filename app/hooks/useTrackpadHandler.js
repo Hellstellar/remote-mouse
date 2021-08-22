@@ -1,7 +1,9 @@
 import {EMouseEvents} from "../constants/enums";
 
 const useTrackpadHandler = (remoteMouseService, sensitivity) => {
-    const tapDuration = 200;
+    const tapDuration = 300;
+    const doubleTapIntervalDuration = 1000;
+    const tapErrorMargin = 5;
     const precision = 3;
     const deltaPosition = {
         x: 0,
@@ -12,6 +14,8 @@ const useTrackpadHandler = (remoteMouseService, sensitivity) => {
         y: 0,
     }
     let isTouched = false
+    let doubleTapHot = false
+    let doubleTapInterval = null;
     let touchStartTimestamp = null;
     let prevMoveTouchTimestamp = null
     let numberOfTouches = 0;
@@ -20,8 +24,8 @@ const useTrackpadHandler = (remoteMouseService, sensitivity) => {
         const time = timestamp - prevMoveTouchTimestamp
         prevMoveTouchTimestamp = timestamp
         const distance = Math.hypot(deltaPosition.x, deltaPosition.y)
-        const velocity = (distance/time) * sensitivity
-        if(velocity < 1)
+        const velocity = (distance / time) * sensitivity
+        if (velocity < 1)
             return 1
         return velocity.toFixed(precision)
     };
@@ -33,7 +37,7 @@ const useTrackpadHandler = (remoteMouseService, sensitivity) => {
         const deltaY = (currentPositionY - previousPosition.y)
         previousPosition.x = currentPositionX
         previousPosition.y = currentPositionY
-        if(!isTouched) {
+        if (!isTouched) {
             isTouched = true
             return
         }
@@ -42,17 +46,33 @@ const useTrackpadHandler = (remoteMouseService, sensitivity) => {
     };
 
     const _isTap = () => {
-        return touchStartTimestamp && (Date.now() - touchStartTimestamp < tapDuration);
+        const touchDuration = Date.now() - touchStartTimestamp;
+        return touchStartTimestamp && (touchDuration < tapDuration) && (deltaPosition.x < tapErrorMargin && deltaPosition.y < tapErrorMargin);
     }
 
-    const _handleTrackpadTap = (touches) => {
-        if(_isTap()){
+    const _handleTrackpadTap = () => {
+        if (_isTap()) {
             if (numberOfTouches === 2)
                 remoteMouseService.sendMessage(EMouseEvents.RIGHT_CLICK)
+            else if (_isDoubleTap())
+                remoteMouseService.sendMessage(EMouseEvents.DOUBLE_CLICK)
             else
                 remoteMouseService.sendMessage(EMouseEvents.LEFT_CLICK)
         }
     }
+
+    const _isDoubleTap = () => {
+        if (doubleTapHot)
+            return true;
+        else {
+            if (!doubleTapInterval) {
+                doubleTapInterval = setInterval(() => doubleTapHot = false, doubleTapIntervalDuration)
+            }
+            doubleTapHot = true;
+            return false;
+        }
+    }
+
 
     const onStartShouldSetResponder = nativeEvent => {
         touchStartTimestamp = Date.now();
@@ -74,9 +94,9 @@ const useTrackpadHandler = (remoteMouseService, sensitivity) => {
     }
 
 
-    const handleTouchRelease = nativeEvent => {
+    const handleTouchRelease = () => {
         isTouched = false
-        _handleTrackpadTap(nativeEvent.touches)
+        _handleTrackpadTap()
         numberOfTouches = 0;
         previousPosition.x = 0;
         previousPosition.y = 0;

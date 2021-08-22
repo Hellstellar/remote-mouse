@@ -10,7 +10,7 @@ const Trackpad = ({remoteMouseService, sensitivity}) => {
         <View
             onStartShouldSetResponder={event => onStartShouldSetResponder(event.nativeEvent)}
             onResponderMove={event => handleTrackpadMove(event.nativeEvent)}
-            onResponderRelease={event => handleTouchRelease(event.nativeEvent)}
+            onResponderRelease={handleTouchRelease}
             style={styles.trackpad}>
         </View>
     )
