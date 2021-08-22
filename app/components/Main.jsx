@@ -9,8 +9,10 @@ const Main = () => {
     const [isConnected, setIsConnected] = useState(false)
     const [retryScan, setRetryScan] = useState(false)
     const [sensitivity, setSensitivity] = useState(3)
+    const [ipScannerLoader, setIpScannerLoader] = useState(false)
     const openConnectionHandler = () => {
         setIsConnected(true)
+        setIpScannerLoader(false)
     }
 
     const closedConnectionHandler = () => {
@@ -23,6 +25,7 @@ const Main = () => {
 
     const handleRemoteIpAddress = (remoteIpAddress) => {
         setRetryScan(false)
+        setIpScannerLoader(true)
         remoteMouseService.setRemoteConnection(remoteIpAddress)
     }
 
@@ -50,7 +53,8 @@ const Main = () => {
                 </>
             ) : (
                 <>
-                    <RemoteIpScanner scannedDataHandler={handleRemoteIpAddress} retry={retryScan}/>
+                    <RemoteIpScanner scannedDataHandler={handleRemoteIpAddress} retry={retryScan}
+                                     loader={ipScannerLoader}/>
                 </>
             )}
         </Flex>

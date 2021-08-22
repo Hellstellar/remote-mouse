@@ -3,17 +3,17 @@ import {StyleSheet} from 'react-native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import {Button, Flex, Heading, List, Modal, QuestionIcon, Spacer, Text, WarningIcon} from "native-base";
 
-const RemoteIpScanner = ({scannedDataHandler, retry}) => {
-        const [hasPermission, setHasPermission] = useState(null);
-        const [scanned, setScanned] = useState(false);
-        const [showInfo, setShowInfo] = useState(false)
+const RemoteIpScanner = ({scannedDataHandler, retry, loader}) => {
+    const [hasPermission, setHasPermission] = useState(null);
+    const [scanned, setScanned] = useState(false);
+    const [showInfo, setShowInfo] = useState(false)
 
-        useEffect(() => {
-            (async () => {
-                const {status} = await BarCodeScanner.requestPermissionsAsync();
-                setHasPermission(status === 'granted');
-            })();
-        }, []);
+    useEffect(() => {
+        (async () => {
+            const {status} = await BarCodeScanner.requestPermissionsAsync();
+            setHasPermission(status === 'granted');
+        })();
+    }, []);
 
         const handleBarCodeScanned = (event) => {
             console.log(event.data)
@@ -37,8 +37,11 @@ const RemoteIpScanner = ({scannedDataHandler, retry}) => {
                 />
 
                 <Flex direction={"column"} align={"center"} justify={"center"}>
-                    <Text mt={20} pt={20} color={"emerald.300"} fontSize="lg">Scan QR code on desktop app.</Text>
+                    <Text mt={20} pt={20} color={"emerald.300"} fontSize="lg">Scan QR code on the desktop app.</Text>
                     <Spacer/>
+                    {loader && !retry &&
+                    <Text color={"emerald.300"} fontSize="lg">Connecting...</Text>
+                    }
                     {retry && scanned &&
                     <>
                         <Button bg={"emerald.300"} color={"blueGray.900"} onPress={() => setScanned(false)}>
