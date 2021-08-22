@@ -1,7 +1,7 @@
-import { EMouseEvents } from "../constants/enums";
+import {EMouseEvents} from "../constants/enums";
 
 const useTrackpadHandler = (remoteMouseService, sensitivity) => {
-    const tapDuration = 100;
+    const tapDuration = 200;
     const precision = 3;
     const deltaPosition = {
         x: 0,
@@ -14,6 +14,7 @@ const useTrackpadHandler = (remoteMouseService, sensitivity) => {
     let isTouched = false
     let touchStartTimestamp = null;
     let prevMoveTouchTimestamp = null
+    let numberOfTouches = 0;
 
     const _calculateVelocity = (timestamp) => {
         const time = timestamp - prevMoveTouchTimestamp
@@ -46,7 +47,7 @@ const useTrackpadHandler = (remoteMouseService, sensitivity) => {
 
     const _handleTrackpadTap = (touches) => {
         if(_isTap()){
-            if(touches.length === 2)
+            if (numberOfTouches === 2)
                 remoteMouseService.sendMessage(EMouseEvents.RIGHT_CLICK)
             else
                 remoteMouseService.sendMessage(EMouseEvents.LEFT_CLICK)
@@ -60,19 +61,23 @@ const useTrackpadHandler = (remoteMouseService, sensitivity) => {
     }
 
     const handleTrackpadMove = nativeEvent => {
-        _changeDeltaPosition(nativeEvent.locationX, nativeEvent.locationY);
-        const velocity = _calculateVelocity(nativeEvent.timestamp)
-        const scaledDeltaX = (deltaPosition.x * velocity).toFixed()
-        const scaledDeltaY = (deltaPosition.y * velocity).toFixed()
-        const message = `MOVE ${scaledDeltaX} ${scaledDeltaY}`
-        if(deltaPosition.x || deltaPosition.y)
-            remoteMouseService.sendMessage(message)
+        numberOfTouches = nativeEvent.touches.length;
+        if (nativeEvent.touches.length === 1) {
+            _changeDeltaPosition(nativeEvent.locationX, nativeEvent.locationY);
+            const velocity = _calculateVelocity(nativeEvent.timestamp)
+            const scaledDeltaX = (deltaPosition.x * velocity).toFixed()
+            const scaledDeltaY = (deltaPosition.y * velocity).toFixed()
+            const message = `MOVE ${scaledDeltaX} ${scaledDeltaY}`
+            if (deltaPosition.x || deltaPosition.y)
+                remoteMouseService.sendMessage(message)
+        }
     }
 
 
     const handleTouchRelease = nativeEvent => {
         isTouched = false
         _handleTrackpadTap(nativeEvent.touches)
+        numberOfTouches = 0;
         previousPosition.x = 0;
         previousPosition.y = 0;
     }
