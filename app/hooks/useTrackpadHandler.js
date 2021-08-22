@@ -5,6 +5,7 @@ const useTrackpadHandler = (remoteMouseService, sensitivity) => {
     const doubleTapIntervalDuration = 1000;
     const tapErrorMargin = 5;
     const precision = 3;
+    const maxDeltaPosition = 3000
     const deltaPosition = {
         x: 0,
         y: 0,
@@ -70,9 +71,21 @@ const useTrackpadHandler = (remoteMouseService, sensitivity) => {
         }
         doubleTapHot = true;
         return false;
-
     }
 
+    const _getScaledDeltaPosition = (locationX, locationY, timestamp) => {
+        _changeDeltaPosition(locationX, locationY);
+        const velocity = _calculateVelocity(timestamp)
+        const scaledDeltaX = (deltaPosition.x * velocity).toFixed()
+        const scaledDeltaY = (deltaPosition.y * velocity).toFixed()
+        return {scaledDeltaX, scaledDeltaY}
+    }
+
+    const _isValidDeltaPosition = (positionX, positionY) => {
+        const isValidPositionX = positionX < maxDeltaPosition && positionX > -maxDeltaPosition
+        const isValidPositionY = positionY < maxDeltaPosition && positionY > -maxDeltaPosition
+        return (deltaPosition.x || deltaPosition.y) && (isValidPositionX && isValidPositionY)
+    }
 
     const onStartShouldSetResponder = nativeEvent => {
         touchStartTimestamp = Date.now();
@@ -82,18 +95,27 @@ const useTrackpadHandler = (remoteMouseService, sensitivity) => {
 
     const handleTrackpadMove = nativeEvent => {
         numberOfTouches = nativeEvent.touches.length;
-        if (nativeEvent.touches.length === 1) {
-            _changeDeltaPosition(nativeEvent.locationX, nativeEvent.locationY);
-            const velocity = _calculateVelocity(nativeEvent.timestamp)
-            const scaledDeltaX = (deltaPosition.x * velocity).toFixed()
-            const scaledDeltaY = (deltaPosition.y * velocity).toFixed()
+        if (numberOfTouches === 1) {
+            const {
+                scaledDeltaX,
+                scaledDeltaY
+            } = _getScaledDeltaPosition(nativeEvent.locationX, nativeEvent.locationY, nativeEvent.timestamp)
             if (!drag && doubleTapHot) {
                 drag = true;
             }
             const event = drag ? EMouseEvents.DRAG : EMouseEvents.MOVE
-            const message = `${event} ${scaledDeltaX} ${scaledDeltaY}`
-            if (deltaPosition.x || deltaPosition.y)
+            if (_isValidDeltaPosition(scaledDeltaX, scaledDeltaY)) {
+                const message = `${event} ${scaledDeltaX} ${scaledDeltaY}`
                 remoteMouseService.sendMessage(message)
+            }
+        } else if (numberOfTouches === 2) {
+            const locationX = nativeEvent.touches[0].locationX + nativeEvent.touches[1].locationX;
+            const locationY = nativeEvent.touches[0].locationY + nativeEvent.touches[1].locationY;
+            const {scaledDeltaX, scaledDeltaY} = _getScaledDeltaPosition(locationX, locationY, nativeEvent.timestamp)
+            if (_isValidDeltaPosition(scaledDeltaX, scaledDeltaY)) {
+                const message = `${EMouseEvents.SCROLL} ${scaledDeltaX} ${scaledDeltaY}`
+                remoteMouseService.sendMessage(message)
+            }
         }
     }
 
